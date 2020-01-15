@@ -12,6 +12,12 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 
+var $ = require('jquery');
+
+global.$ = require('jquery');
+global.JQuery = require('jquery');
+
+
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -120,11 +126,16 @@ let rendererConfig = {
         removeComments: true
       },
       nodeModules: process.env.NODE_ENV !== 'production'
-        ? path.resolve(__dirname, '../node_modules')
-        : false
+          ? path.resolve(__dirname, '../node_modules')
+          : false
     }),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery'
+    })
+
   ],
   output: {
     filename: '[name].js',

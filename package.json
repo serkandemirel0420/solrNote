@@ -51,6 +51,7 @@
     }
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^3.0.1",
     "axios": "^0.18.0",
     "jquery": "^3.4.1",
     "solr-node": "^1.2.1",

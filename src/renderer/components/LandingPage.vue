@@ -1,20 +1,44 @@
 <template>
     <div id="wrapper">
-        <main>
-            <div>
-                hey there
+        <div id="info" class="flex">
+            <div class="result flex">
+                <span>Result :</span>
+                <span v-if="true">10</span>
             </div>
-        </main>
+
+            <div class="index flex">
+                <span v-if="true">0</span>
+                <span> / </span>
+                <span>10</span>
+            </div>
+        </div>
+        <input
+                id="filter"
+                type="text"
+                v-on:keydown="keydownPrevent"
+                v-on:keydown.up="iterateUp"
+                v-on:keydown.down="iterateDown"
+                v-model="filterText"
+        />
+
+        <editor
+                id="editor"
+                v-model="content"
+                api-key="xluuxt70fff5jeyswtbg406oeydfhkhvf5r7i32u40qeauur"
+                :init="init"
+        ></editor>
     </div>
 </template>
 
 <script>
 
+    import Editor from "@tinymce/tinymce-vue";
+
     // Require module
     var SolrNode = require('solr-node');
 
     // Create client
-    var client = new SolrNode({
+    var solrClient = new SolrNode({
         host: '127.0.0.1',
         port: '8983',
         core: 'solrNote',
@@ -29,11 +53,32 @@
 
     export default {
         name: 'landing-page',
-        components: {},
+        components: {
+            editor: Editor
+        },
         data() {
             return {
                 content: null,
-                result : []
+                result: [],
+                filterText: "",
+                init: {
+                    plugins:
+                        "advlist autolink lists link image imagetools charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code  media nonbreaking save table contextmenu directionality emoticons template paste textcolor colorpicker textpattern",
+                    paste_data_images: true,
+                    menubar: true,
+                    statusbar: false,
+                    extended_valid_elements: "+@[data-src]"
+                }
+
+            }
+        },
+        async mounted() {
+            try {
+                let query = {text: 's',};
+                const result = await solrClient.search(query);
+                console.log('Response:', result.response);
+            } catch (err) {
+                console.error(err);
             }
         },
         methods: {
@@ -45,6 +90,17 @@
             },
             rawContent() {
                 return this.content.replace(/<[^>]+>|&nbsp;/g, "").replace(/\s{2,}/, " ");
+            },
+            iterateUp() {
+
+            },
+            iteratedown() {
+
+            },
+            keydownPrevent(event) {
+                if (event.which === 38 || event.which === 40) {
+                    event.preventDefault();
+                }
             },
         },
         computed: {},
@@ -65,10 +121,31 @@
         font-family: 'Source Sans Pro', sans-serif;
     }
 
+    .flex{
+        display: flex;
+    }
 
     main {
         display: flex;
         justify-content: space-between;
+    }
+
+    #wrapper {
+        height: 100vh;
+        padding: 25px 80px;
+        width: 100vw;
+    }
+
+    div#info {
+        justify-content: space-between;
+        padding: 4px;
+    }
+
+    input#filter {
+        padding: 8px;
+        font-size: 120%;
+        margin-bottom: 10px;
+        width: 100%;
     }
 
 
