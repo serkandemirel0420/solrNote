@@ -15,6 +15,8 @@ npm run dev
 npm run build
 
 
+#docker run -d -v "$PWD/solrdata:/var/solr" -p 8983:8983 --name my_solr solr:8 solr-precreate solrNote
+
 ```
 
 ---
