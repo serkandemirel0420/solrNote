@@ -27,6 +27,16 @@
                 api-key="xluuxt70fff5jeyswtbg406oeydfhkhvf5r7i32u40qeauur"
                 :init="init"
         ></editor>
+        <div class="buttons">
+            <button @click="addData" class="button">Submit</button>
+            <button @click="updateData" class="button">Update</button>
+            <button @click="deleteData" class="button">Delete</button>
+        </div>
+
+
+        <div id="resultAread">
+
+        </div>
     </div>
 </template>
 
@@ -102,6 +112,72 @@
                     event.preventDefault();
                 }
             },
+            fileUpload(data) {
+                let fs = require("fs");
+
+                try {
+                    var name =
+                        Math.random()
+                            .toString(36)
+                            .substring(2) + Date.now().toString(36);
+                    fs.writeFileSync(
+                        "/Users/serkan/Dropbox/" + name + ".png",
+                        data.split(";base64,").pop(),
+                        { encoding: "base64" }
+                    );
+                    return "http://localhost:9191/static/" + name + ".png";
+                } catch (e) {
+                    console.log("errrrrrr");
+                }
+            },
+            async addData() {
+
+                debugger
+                var rawHTML = this.content;
+                var $div = $("<div>").html(rawHTML);
+
+                //loop, upload, replace attributes
+                $div.find("img").each((index, img) => {
+                    var data = img.src;
+                    if (img.src.startsWith("data:image")) {
+                        var url = this.fileUpload(data);
+                        $(img).attr("src", url);
+                        $(img).removeAttr("id");
+                    }
+                });
+
+                this.content = $($div).prop("outerHTML");
+
+
+                let data = {content: this.rawContent(), content_html: this.content, tags: []};
+
+
+
+                try{
+                    // JSON Data
+                    // let data = {
+                    //     content: 'jason',
+                    //     content_html: 'state',
+                    //     tag: ["empty"],
+                    // };
+
+                    // Update document to Solr server
+                    let result = await solrClient.update(data);
+                    let result2 = await solrClient.commit();
+                    console.log("done");
+
+
+                }catch (err) {
+                    console.log(err)
+                }
+
+            },
+            updateData() {
+
+            },
+            deleteData() {
+
+            }
         },
         computed: {},
         watch: {}
@@ -121,7 +197,7 @@
         font-family: 'Source Sans Pro', sans-serif;
     }
 
-    .flex{
+    .flex {
         display: flex;
     }
 
@@ -146,6 +222,16 @@
         font-size: 120%;
         margin-bottom: 10px;
         width: 100%;
+    }
+
+    button.button {
+        padding: 9px 15px;
+        margin-right: 18px;
+        float: left;
+        margin-top: 10px;
+        background: whitesmoke;
+        border: 1px solid gainsboro;
+        cursor: pointer;
     }
 
 
