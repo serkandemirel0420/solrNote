@@ -12,3 +12,4 @@ thumbs.db
 
 /dist/
 /package-lock.json
+electron-builder.yml
