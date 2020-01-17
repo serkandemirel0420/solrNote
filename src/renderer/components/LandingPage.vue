@@ -27,6 +27,14 @@
                 api-key="xluuxt70fff5jeyswtbg406oeydfhkhvf5r7i32u40qeauur"
                 :init="init"
         ></editor>
+
+        <input
+                id="tags"
+                type="text"
+                v-on:keydown="keydownPrevent"
+                v-model="tags"
+        />
+
         <div class="buttons">
             <button @click="addData" class="button">Submit</button>
             <button @click="updateData" class="button">Update</button>
@@ -34,8 +42,9 @@
         </div>
 
 
-        <div id="resultAread">
-
+        <div v-if="result.length"  id="resultContainer">
+            result page
+            <div class="resultItem" v-for="item of result" v-html="item.content_html"> </div>
         </div>
     </div>
 </template>
@@ -71,6 +80,7 @@
                 content: null,
                 result: [],
                 filterText: "",
+                tags: "",
                 init: {
                     plugins:
                         "advlist autolink lists link image imagetools charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code  media nonbreaking save table contextmenu directionality emoticons template paste textcolor colorpicker textpattern",
@@ -132,7 +142,7 @@
             },
             async addData() {
 
-                debugger
+
                 var rawHTML = this.content;
                 var $div = $("<div>").html(rawHTML);
 
@@ -149,7 +159,7 @@
                 this.content = $($div).prop("outerHTML");
 
 
-                let data = {content: this.rawContent(), content_html: this.content, tags: []};
+                let data = {content: this.rawContent(), content_html: this.content, tags: this.tagsComputed};
 
 
 
@@ -177,10 +187,35 @@
             },
             deleteData() {
 
+            },
+            async search() {
+                try {
+                    let searchQuery = solrClient.query().q({content: this.filterText});
+                    let result = await solrClient.search(searchQuery);
+                    //TODO  add info to above input - result time from result var
+                    this.result = result.response.docs;
+
+                }catch (e) {
+
+                    console.log(e)
+                }
+
             }
         },
-        computed: {},
-        watch: {}
+        computed: {
+            tagsComputed() {
+                return this.tags.split(/[ ,]+/);
+            }
+        },
+        watch: {
+            filterText() {
+
+                this.search();
+            },
+            result() {
+
+            }
+        }
     }
 </script>
 
@@ -217,11 +252,15 @@
         padding: 4px;
     }
 
-    input#filter {
+    input#filter, input#tags {
         padding: 8px;
         font-size: 120%;
         margin-bottom: 10px;
         width: 100%;
+    }
+
+    .buttons{
+        display: flex;
     }
 
     button.button {
@@ -232,6 +271,18 @@
         background: whitesmoke;
         border: 1px solid gainsboro;
         cursor: pointer;
+    }
+
+    #resultContainer{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .resultItem {
+        display: flex;
+        border: 1px solid lightgray;
+        padding: 10px;
+        margin: 16px 0;
     }
 
 
