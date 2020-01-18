@@ -1,0 +1,12 @@
+version: 0.0.7
+files:
+  - url: solrnote-0.0.7-mac.zip
+    sha512: k46cuMrxQJDeTq6r9zs1k3Emh0+DumPE1A05PrfAEgswr6Xk51HnTengTfbMBkYm81z6YEEjz5hywKKkQpY7Yw==
+    size: 49665678
+    blockMapSize: 53504
+  - url: solrnote-0.0.7.dmg
+    sha512: +SonQYXz5D7uJ2nFusG5kuoHJXYE4eko6uIlRGKyvMiq7+FH1ct0MPifXrUUt+o4SPDArwMtfIi0nJfAyXLv6w==
+    size: 51710381
+path: solrnote-0.0.7-mac.zip
+sha512: k46cuMrxQJDeTq6r9zs1k3Emh0+DumPE1A05PrfAEgswr6Xk51HnTengTfbMBkYm81z6YEEjz5hywKKkQpY7Yw==
+releaseDate: '2020-01-18T00:16:36.763Z'
