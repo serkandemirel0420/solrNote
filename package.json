@@ -1,10 +1,14 @@
 {
   "name": "solrnote",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "author": "serkan <serkandemirel0420@gmail.com>",
   "description": "An electron-vue project",
   "license": null,
   "main": "./dist/electron/main.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/serkandemirel0420/solrNote.git"
+  },
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
@@ -14,7 +18,9 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": ""
+    "postinstall": "",
+    "cbuild": "electron-builder build --mac --publish never",
+    "cdeploy": "electron-builder build --mac --publish always"
   },
   "build": {
     "productName": "solrnote",
@@ -41,6 +47,10 @@
       ]
     },
     "mac": {
+      "target" : [
+        "dmg",
+        "zip"
+      ],
       "icon": "build/icons/icon.icns"
     },
     "win": {
@@ -53,6 +63,9 @@
   "dependencies": {
     "@tinymce/tinymce-vue": "^3.0.1",
     "axios": "^0.18.0",
+    "electron-is-dev": "^1.1.0",
+    "electron-log": "^4.0.3",
+    "electron-updater": "^4.2.0",
     "jquery": "^3.4.1",
     "solr-node": "^1.2.1",
     "vue": "^2.5.16",
